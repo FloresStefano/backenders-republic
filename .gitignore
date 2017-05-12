@@ -12,7 +12,7 @@
 .classpath
 .project
 *.log
-*.log
+.springBeans
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
