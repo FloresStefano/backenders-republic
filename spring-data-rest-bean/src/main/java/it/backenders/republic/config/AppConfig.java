@@ -1,7 +1,5 @@
 package it.backenders.republic.config;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -37,18 +35,9 @@ public class AppConfig extends RepositoryRestMvcConfiguration {
 
 	private static final Logger log = LoggerFactory.getLogger(AppConfig.class);
 
-
-
-
 	@Override
-	protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-		super.configureRepositoryRestConfiguration(config);
-		try {
-			config.setBaseUri(new URI("/api"));
-		} catch (URISyntaxException e) {
-			log.error(e.getMessage());
-		}
-
+	public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
+		config.setBasePath("/api");
 	}
 
 	@Bean
@@ -56,8 +45,7 @@ public class AppConfig extends RepositoryRestMvcConfiguration {
 		EmbeddedDatabaseBuilder dsBilder = new EmbeddedDatabaseBuilder();
 		dsBilder.setName("testdb;DATABASE_TO_UPPER=false");
 		dsBilder.setType(EmbeddedDatabaseType.H2);
-		DataSource out = dsBilder.build();
-		return out;
+		return dsBilder.build();
 
 	}
 
@@ -65,19 +53,10 @@ public class AppConfig extends RepositoryRestMvcConfiguration {
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws ClassNotFoundException {
 
 		LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-		DataSource dataSource = dataSource();
-		HibernateJpaVendorAdapter adapter = jpaVendorAdapter();
-		Properties props = jpaProperties();
-
-		adapter.setDatabase(Database.H2);
-		props.put(Environment.HBM2DDL_AUTO, "create-drop");
-
-		factoryBean.setDataSource(dataSource);
 		factoryBean.setPackagesToScan("it.backenders.republic");
-		factoryBean.setJpaVendorAdapter(adapter);
-		factoryBean.setJpaProperties(props);
-		factoryBean.afterPropertiesSet();
-
+		factoryBean.setDataSource(dataSource());
+		factoryBean.setJpaVendorAdapter(jpaVendorAdapter());
+		factoryBean.setJpaProperties(jpaProperties());
 		return factoryBean;
 
 	}
@@ -104,12 +83,8 @@ public class AppConfig extends RepositoryRestMvcConfiguration {
 		// update: update the schema.
 		// create: creates the schema, destroying previous data. (DEFAULT)
 		// create-drop: drop the schema at the end of the session
-		String jpaProperty = "validate";
-
-		log.info("AppConfig property used: " + jpaProperty);
-
 		Properties properties = new Properties();
-		properties.put(Environment.HBM2DDL_AUTO, jpaProperty);
+		properties.put(Environment.HBM2DDL_AUTO, "create-drop");
 		return properties;
 	}
 
