@@ -1,4 +1,18 @@
-*.class
+*/target/
+*/.settings/
+*/.metadata/
+*/libs/
+*/.classpath
+*/.project
+/.settings/
+/.metadata/
+**/testResults/
+/libs/
+/Servers
+.classpath
+.project
+*.log
+*.log
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
