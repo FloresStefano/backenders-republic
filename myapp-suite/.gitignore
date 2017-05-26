@@ -1,0 +1,12 @@
+**/target/
+*/.settings/
+*/.metadata/
+*/libs/
+*/.classpath
+*/.project
+**/.settings/
+/.metadata/
+/libs/
+.classpath
+.project
+*.log

@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+
+	<!-- ATTENZIONE: CONFIGURAZIONE DI SVILUPPO	-->
+
+	<!-- ConsoleAppender, Standard Output -->
+	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p %d{ISO8601} %c@%L | %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Appender Principale -->
+	<appender name="LOG" class="org.apache.log4j.RollingFileAppender">
+		<param name="file" value="/logs/YI/YI.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<param name="MaxFileSize" value="100000KB" />
+		<param name="MaxBackupIndex" value="1" /><!-- Keep one backup file -->
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p %d{ISO8601} %c@%L | %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Appender Web Services -->
+	<appender name="LOG-WS" class="org.apache.log4j.RollingFileAppender">
+		<param name="append" value="true" />
+		<param name="file" value="/logs/YI/YI_ws.log" />
+		<param name="encoding" value="UTF-8" />
+		<param name="MaxFileSize" value="100000KB" />
+		<param name="MaxBackupIndex" value="1" /><!-- Keep one backup file -->		
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p %d{ISO8601} %c@%L | %m%n" />
+		</layout>
+	</appender>
+	
+
+	<!-- Appender Spring -->
+	<appender name="spring" class="org.apache.log4j.RollingFileAppender">
+		<param name="file" value="/logs/YI/YI_springframework.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<param name="MaxFileSize" value="100000KB" />
+		<param name="MaxBackupIndex" value="1" /><!-- Keep one backup file -->
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p %d{ISO8601} %c@%L | %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Appender Performance -->
+	<appender name="performance" class="org.apache.log4j.RollingFileAppender">
+		<param name="file" value="/logs/YI/YI_performance.log" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<param name="MaxFileSize" value="100000KB" />
+		<param name="MaxBackupIndex" value="1" /><!-- Keep one backup file -->
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p %d{ISO8601} %c@%L | %m%n" />
+		</layout>
+	</appender>
+
+	<category
+		name="log4j.logger.org.springframework.ws.client.MessageTracing.sent">
+		<priority value="TRACE" />
+		<appender-ref ref="spring" />
+	</category>
+	
+	<category
+		name="log4j.logger.org.springframework.ws.client.MessageTracing.received">
+		<priority value="TRACE" />
+		<appender-ref ref="spring" />
+	</category>
+
+	<category name="org.springframework.ws">
+		<priority value="error" />
+		<appender-ref ref="spring" />
+	</category>
+	
+	<category name="org.apache.commons.beanutils.converters">
+		<priority value="error" />
+	</category>
+
+	<category name="log4j.logger.org.ajax4jsf">
+		<priority value="error" />
+		<appender-ref ref="spring" />
+	</category>
+	
+	<category name="log4j.logger.org.richfaces">
+		<priority value="error" />
+		<appender-ref ref="spring" />
+	</category>
+
+	<category name="org.springframework">
+		<priority value="error" />
+		<appender-ref ref="spring" />
+	</category>
+
+	<category name="org.springframework.jdbc.core" additivity="false">
+		<priority value="debug" />
+		<appender-ref ref="spring" />
+	</category>
+
+
+	<category name="org.exolab.castor">
+		<priority value="INFO" />
+		<appender-ref ref="LOG" />
+		<appender-ref ref="stdout" />
+	</category>
+
+	<category name="org.castor.core">
+		<priority value="INFO" />
+		<appender-ref ref="LOG" />
+		<appender-ref ref="stdout" />
+	</category>
+
+
+	<logger name="it.addvalue.proxy.logger.JaxWsSoapLogger" additivity="false">
+		<priority value="DEBUG" />
+		<appender-ref ref="LOG-WS" /> 
+	</logger>
+
+	<root>
+		<priority value="DEBUG" />
+		<appender-ref ref="LOG" />
+		<appender-ref ref="stdout" />
+	</root>
+</log4j:configuration>

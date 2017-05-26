@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- <groupId>it.addvalue</groupId> -->
+	<artifactId>bundle-war</artifactId>
+	<packaging>war</packaging>
+	<!-- <version>1.0</version> -->
+
+	<parent>
+		<groupId>it.addvalue</groupId>
+		<artifactId>bundle</artifactId>
+		<version>1.0</version>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>it.addvalue</groupId>
+			<artifactId>myapp-module-conservazione</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>it.addvalue</groupId>
+			<artifactId>myapp-module-gateway</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>bundle-war</finalName>
+	</build>
+</project>

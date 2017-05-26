@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>bundle-standalone-batch</artifactId>
+
+
+	<parent>
+		<groupId>it.addvalue</groupId>
+		<artifactId>bundle-standalone</artifactId>
+		<version>1.0</version>
+	</parent>
+
+	<dependencies>
+		<!-- Inizio: Dependency myapp-module -->
+		<dependency>
+			<groupId>it.addvalue</groupId>
+			<artifactId>myapp-module-batch</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<!-- Fine: Dependency myapp-module -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>		
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>			
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>2.0.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repositoryLayout>flat</repositoryLayout>
+					<useWildcardClassPath>true</useWildcardClassPath>
+					<binFolder>p</binFolder>
+					<repositoryName>p/lib</repositoryName>
+
+					<platforms>
+						<platform>windows</platform>
+					</platforms>
+
+					<programs>
+
+						<!-- BATCH DEMO -->
+						<program>
+							<mainClass>it.addvalue.BatchCommandLine</mainClass>
+							<id>letturaDaFileJob</id>
+							<commandLineArguments>
+								<commandLineArgument>--log4j C:/Projects/"YouInvoice
+									Project"/YouInvoiceBE/myapp-module/myapp-module-batch/src/main/resources/config/log4j.xml</commandLineArgument>
+								<commandLineArgument>--config C:/Projects/"YouInvoice
+									Project"/YouInvoiceBE/myapp-module/myapp-module-batch/src/main/resources/config/batch-globals.properties</commandLineArgument>
+								<commandLineArgument>--batch_file
+									/batch/elaborazioneDemo_batch.xml</commandLineArgument>
+								<commandLineArgument>letturaDaFileJob</commandLineArgument>
+							</commandLineArguments>
+						</program>
+					</programs>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>bat</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>src/main/resources/bat</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/appassembler/p</directory>
+									<includes>
+										<include>**/*.bat</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

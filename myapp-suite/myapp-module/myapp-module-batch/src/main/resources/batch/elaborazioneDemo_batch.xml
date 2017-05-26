@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-3.0.xsd">
+
+    <batch:job id="letturaDaFileJob" job-repository="jobRepository">
+        <batch:step id="letturaDaFileStep">
+            <batch:tasklet>
+                <batch:chunk commit-interval="5">
+                    <batch:reader>
+                        <bean class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+                            <property name="resource" value="file:#{jobParameters['inputFile']}"/>
+                            <property name="lineMapper">
+                                <bean class="org.springframework.batch.item.file.mapping.PassThroughLineMapper"/>
+                            </property>
+                        </bean>
+                    </batch:reader>
+                    <batch:processor>
+                        <bean class="org.springframework.batch.item.support.CompositeItemProcessor">
+                            <property name="delegates">
+                                <list>
+                                    <bean class="it.addvalue.demo.LoggingItemProcessor"/>
+                                    <bean class="it.addvalue.demo.TimeConsumingItemProcessor"
+                                          factory-method="createWithRandomDelay">
+                                        <constructor-arg value="100"/>
+                                        <constructor-arg value="150"/>
+                                    </bean>
+                                </list>
+                            </property>
+                        </bean>
+                    </batch:processor>
+                    <batch:writer>
+                        <bean class="org.springframework.batch.item.support.CompositeItemWriter">
+                            <property name="delegates">
+                                <list>
+                                    <bean class="it.addvalue.demo.LoggingItemWriter"/>
+                                    <bean class="org.springframework.batch.item.file.FlatFileItemWriter"
+                                          scope="step">
+                                        <property name="resource" value="file:#{jobParameters['outputFile']}"/>
+                                        <property name="lineAggregator">
+                                            <bean class="it.addvalue.demo.UppercaseLineAggregator"/>
+                                        </property>
+                                    </bean>
+                                </list>
+                            </property>
+                        </bean>
+                    </batch:writer>
+                </batch:chunk>
+            </batch:tasklet>
+            <batch:listeners>
+                <batch:listener>
+                    <bean class="it.addvalue.performance.PerformanceMonitor"
+                          factory-method="createByResource" scope="step">
+                        <constructor-arg value="file:#{jobParameters['inputFile']}"/>
+                    </bean>
+                </batch:listener>
+            </batch:listeners>
+        </batch:step>
+    </batch:job>
+
+<!--     <batch:job id="letturaDaDatabaseJob" job-repository="jobRepository"> -->
+<!--         <batch:step id="letturaDaDatabaseStep"> -->
+<!--             <batch:tasklet> -->
+<!--                 <batch:chunk commit-interval="5"> -->
+<!--                     <batch:reader> -->
+<!--                         <bean class="org.springframework.batch.item.database.JdbcCursorItemReader" -->
+<!--                               scope="step"> -->
+<!--                             <property name="dataSource" ref="dataSource"/> -->
+<!--                             <property name="sql" -->
+<!--                                       value="SELECT * FROM FITNESSE_SAMPLE_TABLE WHERE 1=1"/> -->
+<!--                             <property name="rowMapper"> -->
+<!--                                 <bean class="org.springframework.jdbc.core.BeanPropertyRowMapper"> -->
+<!--                                     <property name="mappedClass" -->
+<!--                                               value="it.addvalue.demo.FitnesseSampleTableRecord"/> -->
+<!--                                 </bean> -->
+<!--                             </property> -->
+<!--                         </bean> -->
+<!--                     </batch:reader> -->
+<!--                     <batch:processor> -->
+<!--                         <bean class="it.addvalue.demo.LoggingItemProcessor"/> -->
+<!--                     </batch:processor> -->
+<!--                     <batch:writer> -->
+<!--                         <bean class="it.addvalue.demo.LoggingItemWriter"/> -->
+<!--                     </batch:writer> -->
+<!--                 </batch:chunk> -->
+<!--             </batch:tasklet> -->
+<!--             <batch:listeners> -->
+<!--                 <batch:listener> -->
+<!--                     <bean class="it.addvalue.performance.PerformanceMonitor" -->
+<!--                           factory-method="createByQuery"> -->
+<!--                         <constructor-arg name="dataSource" ref="dataSource"/> -->
+<!--                         <constructor-arg -->
+<!--                                 name="sql" -->
+<!--                                 value="SELECT * FROM FITNESSE_SAMPLE_TABLE WHERE 1=1"/> -->
+<!--                         <property name="metricsPublishingStrategy"> -->
+<!--                             <bean class="it.addvalue.performance.publishers.DatabasePolipoMetricsPublisher"> -->
+<!--                                 <property name="dataSource" ref="dataSource"/> -->
+<!--                             </bean> -->
+<!--                         </property> -->
+<!--                     </bean> -->
+<!--                 </batch:listener> -->
+<!--             </batch:listeners> -->
+<!--         </batch:step> -->
+<!--     </batch:job> -->
+
+<!--     <batch:job id="letturaDaDatabaseCasoRealeJob" job-repository="jobRepository"> -->
+<!--         <batch:step id="letturaDaDatabaseCasoRealeStep"> -->
+<!--             <batch:tasklet> -->
+<!--                 <batch:chunk commit-interval="5"> -->
+<!--                     <batch:reader> -->
+<!--                         <bean class="org.springframework.batch.item.database.JdbcCursorItemReader" -->
+<!--                               scope="step"> -->
+<!--                             <property name="dataSource" ref="dataSource"/> -->
+<!--                             <property name="sql" -->
+<!--                                       value="#{queryLoaderBatch.getQuery('fatturazione.getInfoSezionaliFromFattureWorking')}"/> -->
+<!--                             <property name="rowMapper"> -->
+<!--                                 <bean -->
+<!--                                         class="it.addvalue.bean.mapper.CreazioneSezionaliWorkingMapper"/> -->
+<!--                             </property> -->
+<!--                             <property name="preparedStatementSetter"> -->
+<!--                                 <bean -->
+<!--                                         class="org.springframework.batch.core.resource.ListPreparedStatementSetter"> -->
+<!--                                     <property name="parameters"> -->
+<!--                                         <list> -->
+<!--                                             <value>148</value> -->
+<!--                                         </list> -->
+<!--                                     </property> -->
+<!--                                 </bean> -->
+<!--                             </property> -->
+<!--                         </bean> -->
+<!--                     </batch:reader> -->
+<!--                     <batch:processor> -->
+<!--                         <bean class="org.springframework.batch.item.support.CompositeItemProcessor"> -->
+<!--                             <property name="delegates"> -->
+<!--                                 <list> -->
+<!--                                     <bean class="it.addvalue.demo.LoggingItemProcessor"/> -->
+<!--                                     <bean class="it.addvalue.demo.TimeConsumingItemProcessor" -->
+<!--                                           factory-method="createWithRandomDelay"> -->
+<!--                                         <constructor-arg value="100"/> -->
+<!--                                         <constructor-arg value="150"/> -->
+<!--                                     </bean> -->
+<!--                                 </list> -->
+<!--                             </property> -->
+<!--                         </bean> -->
+<!--                     </batch:processor> -->
+<!--                     <batch:writer> -->
+<!--                         <bean class="it.addvalue.demo.LoggingItemWriter"/> -->
+<!--                     </batch:writer> -->
+<!--                 </batch:chunk> -->
+<!--             </batch:tasklet> -->
+<!--             <batch:listeners> -->
+<!--                 <batch:listener> -->
+<!--                     <bean class="it.addvalue.performance.PerformanceMonitor" -->
+<!--                           factory-method="createByQuery"> -->
+<!--                         <constructor-arg name="dataSource" ref="dataSource"/> -->
+<!--                         <constructor-arg -->
+<!--                                 name="sql" -->
+<!--                                 value="#{queryLoaderBatch.getQuery('fatturazione.getInfoSezionaliFromFattureWorking')}"/> -->
+<!--                         <constructor-arg name="args"> -->
+<!--                             <list> -->
+<!--                                 <value>148</value> -->
+<!--                             </list> -->
+<!--                         </constructor-arg> -->
+<!--                         <property name="metricsPublishingStrategy"> -->
+<!--                             <bean class="it.addvalue.performance.publishers.DatabasePolipoMetricsPublisher"> -->
+<!--                                 <property name="dataSource" ref="dataSource"/> -->
+<!--                             </bean> -->
+<!--                         </property> -->
+<!--                     </bean> -->
+<!--                 </batch:listener> -->
+<!--             </batch:listeners> -->
+<!--         </batch:step> -->
+<!--     </batch:job> -->
+
+    <bean id="jobRepository"
+          class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean"/>
+
+</beans>

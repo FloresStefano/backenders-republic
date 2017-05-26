@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-3.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <context:property-placeholder location="${properties_file}"/>
+
+
+    <context:component-scan base-package="it.addvalue"/>
+
+    <bean id="configLoader" class="it.addvalue.ConfigLoader" factory-method="buildWithConfigBasePath">
+        <constructor-arg value="${configloader.base.path}"/>
+    </bean>
+
+    <!-- Infrastruttura batch -->
+
+    <batch:job-repository id="jobRepository" isolation-level-for-create="REPEATABLE_READ"
+                          data-source="dataSource" transaction-manager="transactionManager"/>
+
+<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+		<property name="nestedTransactionAllowed" value="true" />
+		<property name="validateExistingTransaction" value="true" />
+	</bean>
+    <bean class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+        <property name="jobRepository" ref="jobRepository"/>
+    </bean>
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${datasource.driver.class.name}"/>
+        <property name="url" value="${datasource.url}"/>
+        <property name="username" value="${datasource.username}"/>
+        <property name="password" value="${datasource.password}"/>
+    </bean>
+
+<!--     <import resource="classpath:config/db-config.xml"/> -->
+<!--     <import resource="classpath:config/services-config.xml"/> -->
+    
+    <import resource="classpath:${batch_file}"/>
+
+</beans>
