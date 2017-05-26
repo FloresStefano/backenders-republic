@@ -33,6 +33,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @SpringBootApplication
 public class Application {
+	private static final int PORT_DEFAULT = 8080;
+
 	@Autowired
 	ItemRepository itemRepository;
 
@@ -78,7 +80,7 @@ public class Application {
 	@Bean
 	public EmbeddedServletContainerFactory servletContainer() {
 		TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
-		factory.setPort(9101);
+		factory.setPort(PORT_DEFAULT);
 		factory.setSessionTimeout(10, TimeUnit.MINUTES);
 
 		return factory;

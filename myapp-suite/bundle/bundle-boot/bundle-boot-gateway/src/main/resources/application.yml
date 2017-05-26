@@ -2,7 +2,7 @@ zuul:
   routes:
     youinvoice:
       path: /**
-      url: http://localhost:9101     
+      url: http://localhost:8080     
 spring:
   application:
     name: youinvoice-zuul-gateway
@@ -13,5 +13,3 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
-server:
-  port:8080
