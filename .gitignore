@@ -1,5 +1,6 @@
 */target/
 */.settings/
+*/.idea/
 */.metadata/
 */libs/
 */.classpath
@@ -12,6 +13,7 @@
 .classpath
 .project
 *.log
+*.iml
 .springBeans
 
 # Mobile Tools for Java (J2ME)
