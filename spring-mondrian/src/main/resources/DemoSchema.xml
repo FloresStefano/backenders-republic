@@ -1,0 +1,16 @@
+<Schema name="MondrianDemo Schema">
+  <Cube name="Sales" visible="true" cache="true" enabled="true">
+    <Table name="sales">
+    </Table>
+    <Dimension type="StandardDimension" visible="true" foreignKey="salesperson_id" highCardinality="false" name="SalesPerson">
+      <Hierarchy visible="true" hasAll="true" allMemberName="All Salespeople" primaryKey="salesperson_id">
+        <Table name="salespeople">
+        </Table>
+        <Level name="Salesperson" visible="true" column="salesperson_id" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="ItemsSold" column="sale_id" aggregator="count" visible="true">
+    </Measure>
+  </Cube>
+</Schema>
