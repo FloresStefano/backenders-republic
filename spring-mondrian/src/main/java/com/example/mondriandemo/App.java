@@ -17,11 +17,13 @@ import java.util.Collections;
 
 /**
  * Hello world!
+ * https://mondrian.pentaho.com/documentation/olap.php
  */
 
 @Controller
 @EnableAutoConfiguration
 public class App {
+
 
     @Autowired
     private MondrianClient mondrianClient;
